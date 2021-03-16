@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
@@ -10,21 +9,21 @@ class dbcreate extends Command
     /**
      * The name and signature of the console command.
      *
-     * @var string
+     * @var (string)
      */
     protected $signature = 'db:create {name?}';
 
     /**
      * The console command description.
      *
-     * @var string
+     * @var (string)
      */
     protected $description = 'Create a new MySQL database based on the database config file or the provided name';
 
     /**
      * Create a new command instance.
      *
-     * @return void
+     * @return (void)
      */
     public function __construct()
     {
@@ -34,7 +33,7 @@ class dbcreate extends Command
     /**
      * Execute the console command.
      *
-     * @return void
+     * @return (void)
      */
     public function handle()
     {
