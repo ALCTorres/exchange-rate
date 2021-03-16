@@ -58,10 +58,10 @@
                     <table class="table table-hover">
                         <thead>
                             <tr>
-                                <th scope="col">Code</th>
-                                <th class="text-center" scope="col">Amount</th>
-                                <th class="text-center" scope="col">Rate</th>
-                                <th class="text-center" scope="col">Historical</th>
+                                <th scope="col">Currency Code From-To</th>
+                                <th class="text-center" scope="col">Converted Amount</th>
+                                <th class="text-center" scope="col">Exchange Rate</th>
+                                <th class="text-center" scope="col">Exchange Rate Date</th>
                             </tr>
                         </thead>
                         <tbody>
