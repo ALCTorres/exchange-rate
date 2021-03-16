@@ -245,31 +245,28 @@ class ExchangeRateController extends Controller
                     // If database is not available return external API result
                     if ( empty( $result ) )
                     {
-                        $rates = [];
                         if ( $to === 'all' && !empty( $decode['rates'] ) && !empty( $diff ) )
                         {
                             foreach( $diff as $key => $currencyCode )
                             {
                                 $rate = sprintf( "%.2f", ( $decode['rates'][$currencyCode] / $amount ) );
                                 $value = $amount * $rate;
-                                $rates[] = [ 'code' => "$from-$currencyCode", 'historical' => date( "d/m/Y", strtotime( $decode['date'] ) ), 'amount' => numfmt_format_currency( $fmt, $value, $currencyCode ), 'rate' => $rate ];
+                                $result[] = [ 'code' => "$from-$currencyCode", 'historical' => date( "d/m/Y", strtotime( $decode['date'] ) ), 'amount' => numfmt_format_currency( $fmt, $value, $currencyCode ), 'rate' => $rate ];
                             }
                         }
                         else if ( !empty( $decode['result'] ) )
                         {
                             $rate = sprintf( "%.2f", $decode['info']['rate'] );
                             $value = $amount * $rate;
-                            $rates[] = [ 'code' => "$from-$to", 'historical' => date( "d/m/Y", strtotime( $decode['date'] ) ), 'amount' => numfmt_format_currency( $fmt, $value, $to ), 'rate' => $rate ];
+                            $result[] = [ 'code' => "$from-$to", 'historical' => date( "d/m/Y", strtotime( $decode['date'] ) ), 'amount' => numfmt_format_currency( $fmt, $value, $to ), 'rate' => $rate ];
                         }
-
-                        $result = $rates;
                     }
                 }
             }
 
+            // If external API is not available try return historical data
             if ( empty( $result ) )
             {
-                // If external API is not available try return historical data
                 $result = $this->find( $from, $to, $amount, $fmt, $diff );
             }
 
