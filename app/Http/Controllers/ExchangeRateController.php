@@ -44,9 +44,9 @@ class ExchangeRateController extends Controller
 
     /**
      * Return object to format monetary values according currency code
-     * 
+     *
      * @param (string) currency - Currency code
-     * 
+     *
      * @return (object)
      */
     private function getMonetaryFormat( $currency )
@@ -70,13 +70,13 @@ class ExchangeRateController extends Controller
 
     /**
      * Get historical rates if error or off line external API
-     * 
+     *
      * @param (string) from - Currency code base
      * @param (string) to - Specific currency code to verify
      * @param (string) amount - Amount consulted
      * @param (object) fmt - Monetary object formatter
      * @param (array) diff (optional) - Currency codes to verify if have all selected
-     * 
+     *
      * @return (array)
      */
     public function find( $from, $to, $amount, \NumberFormatter $fmt, $diff = null )
@@ -113,7 +113,7 @@ class ExchangeRateController extends Controller
             report( $e );
             /*
              * TO DO
-             * 
+             *
              * In case of exception save logs in database if you wish
              */
         }
@@ -123,14 +123,14 @@ class ExchangeRateController extends Controller
 
     /**
      * Save historical requests to use in case external API off line
-     * 
+     *
      * @param (object) JsonResponse json - Result of API request
      * @param (string) from - Currency code base
      * @param (string) to - Specific currency code to verify
      * @param (string) amount - Amount consulted
      * @param (object) fmt - Monetary object formatter
      * @param (array) diff (optional) - Currency codes to verify if have all selected
-     * 
+     *
      * @return (array)
      */
     public function store( JsonResponse $json, $from, $to, $amount, \NumberFormatter $fmt, $diff = null )
@@ -178,7 +178,7 @@ class ExchangeRateController extends Controller
             report( $e );
             /*
              * TO DO
-             * 
+             *
              * In case of exception save logs in database if you wish
              */
         }
@@ -219,22 +219,8 @@ class ExchangeRateController extends Controller
                     break;
             }
 
-            try
-            {
-                // Send request to external API
-                $getContent = file_get_contents( $this->apiUrl[$apiUrlKey] . http_build_query( $buildQuery ) );
-            }
-            catch ( Throwable $e )
-            {
-                report( $e );
-                $getContent = false;
-                /*
-                 * TO DO
-                 * 
-                 * In case of exception save logs in database if you wish
-                 */
-            }
-
+            // Send request to external API
+            $getContent = file_get_contents( $this->apiUrl[$apiUrlKey] . http_build_query( $buildQuery ) );
             $result = [];
             if ( $getContent !== false )
             {
