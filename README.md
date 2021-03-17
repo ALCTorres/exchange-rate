@@ -38,7 +38,7 @@ If you use another service with port 80 or 3306, stop them because in the follow
 ```bash 
 ./vendor/bin/sail up
 ```
-This command will be built in our application in docker containers, these containers already have PHP and MySQL in version 8. This command will be built in our application in docker containers, these containers already have PHP and MySQL in version 8. After finishing the process, it will be possible to access the environment via URL http: // localhost
+This command will be built in our application in docker containers, these containers already have PHP and MySQL in version 8. After finishing the process, it will be possible to access the environment via URL http: // localhost
 
 It is necessary to generate a new key for the application, to do this run the command below in project path.
 ```bash 
