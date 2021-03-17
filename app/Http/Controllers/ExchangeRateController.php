@@ -30,7 +30,7 @@ class ExchangeRateController extends Controller
      * @var (array)
      * @access private
      */
-    private $apiUrl = [ 'all' => 'https://api.exchangerate.host/latest?places=2&', 'to' => "https://api.exchangerate.host/convert?places=2&" ];
+    private $apiUrl = [ 'all' => 'api.exchangerate.host/latest?places=2&', 'to' => "api.exchangerate.host/convert?places=2&" ];
 
     /**
      * Show exchange rate tools index
@@ -220,7 +220,21 @@ class ExchangeRateController extends Controller
             }
 
             // Send request to external API
-            $getContent = file_get_contents( $this->apiUrl[$apiUrlKey] . http_build_query( $buildQuery ) );
+            try
+            {
+                $getContent = file_get_contents( $this->apiUrl[$apiUrlKey] . http_build_query( $buildQuery ) );
+            }
+            catch ( Throwable $e )
+            {
+                report( $e );
+                $getContent = false;
+                /*
+                 * TO DO
+                 *
+                 * In case of exception save logs in database if you wish
+                 */
+            }
+            
             $result = [];
             if ( $getContent !== false )
             {
