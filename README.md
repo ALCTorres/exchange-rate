@@ -1,6 +1,6 @@
 # EXCHANGE RATE TOOLS
 
-This is a test system develop using [Laravel 8.x](https://laravel.com/docs/8.x) framework to create an endpoint to used by verify and/or convert a currency  amount to another amount according exchange rates available.
+This is a test system develop using [Laravel 8.x](https://laravel.com/docs/8.x) framework to create an endpoint to used by verify and/or convert a currency  amount to another amount according exchange rates available. External API used in project is [exchangerate.host](https://exchangerate.host)
 
 The conversion is available only for the exchange rates:
 
