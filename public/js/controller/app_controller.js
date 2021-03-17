@@ -43,7 +43,6 @@ appExchangeRate.controller( 'exchangeRateCtrl', ['$scope', '$http', function( $s
             method: 'GET'
         } ).then( function success( result )
         {
-            console.log( result )
             $scope.displayLoading = false;
             if ( typeof result.data.success !== 'undefined' && result.data.success === true )
             {
