@@ -198,6 +198,7 @@ class ExchangeRateController extends Controller
         $response = response()->json( [ 'rates' => [], 'success' => false ] );
         if ( $request->has( $this->availableRequestQuery ) )
         {
+            $result = [];
             $to = $request->input( 'to' );
             $from = $request->input( 'from' );
             $amount = ( !empty( $request->input( 'amount' ) ) ) ? $request->input( 'amount' ) : 1;
@@ -223,6 +224,33 @@ class ExchangeRateController extends Controller
             try
             {
                 $getContent = file_get_contents( $this->apiUrl[$apiUrlKey] . http_build_query( $buildQuery ) );
+                if ( $getContent !== false )
+                {
+                    $decode = json_decode( $getContent, true );
+                    if ( !empty( $decode['success'] ) && $decode['success'] === true )
+                    {
+                        $result = $this->store( response()->json( $decode ), $from, $to, $amount, $fmt, $diff );
+                        // If database is not available return external API result
+                        if ( empty( $result ) )
+                        {
+                            if ( $to === 'all' && !empty( $decode['rates'] ) && !empty( $diff ) )
+                            {
+                                foreach( $diff as $key => $currencyCode )
+                                {
+                                    $rate = sprintf( "%.2f", ( $decode['rates'][$currencyCode] / $amount ) );
+                                    $value = $amount * $rate;
+                                    $result[] = [ 'code' => "$from-$currencyCode", 'historical' => date( "d/m/Y", strtotime( $decode['date'] ) ), 'amount' => numfmt_format_currency( $fmt, $value, $currencyCode ), 'rate' => $rate ];
+                                }
+                            }
+                            else if ( !empty( $decode['result'] ) )
+                            {
+                                $rate = sprintf( "%.2f", $decode['info']['rate'] );
+                                $value = $amount * $rate;
+                                $result[] = [ 'code' => "$from-$to", 'historical' => date( "d/m/Y", strtotime( $decode['date'] ) ), 'amount' => numfmt_format_currency( $fmt, $value, $to ), 'rate' => $rate ];
+                            }
+                        }
+                    }
+                }
             }
             catch ( Throwable $e )
             {
@@ -235,35 +263,6 @@ class ExchangeRateController extends Controller
                  */
             }
             
-            $result = [];
-            if ( $getContent !== false )
-            {
-                $decode = json_decode( $getContent, true );
-                if ( !empty( $decode['success'] ) && $decode['success'] === true )
-                {
-                    $result = $this->store( response()->json( $decode ), $from, $to, $amount, $fmt, $diff );
-                    // If database is not available return external API result
-                    if ( empty( $result ) )
-                    {
-                        if ( $to === 'all' && !empty( $decode['rates'] ) && !empty( $diff ) )
-                        {
-                            foreach( $diff as $key => $currencyCode )
-                            {
-                                $rate = sprintf( "%.2f", ( $decode['rates'][$currencyCode] / $amount ) );
-                                $value = $amount * $rate;
-                                $result[] = [ 'code' => "$from-$currencyCode", 'historical' => date( "d/m/Y", strtotime( $decode['date'] ) ), 'amount' => numfmt_format_currency( $fmt, $value, $currencyCode ), 'rate' => $rate ];
-                            }
-                        }
-                        else if ( !empty( $decode['result'] ) )
-                        {
-                            $rate = sprintf( "%.2f", $decode['info']['rate'] );
-                            $value = $amount * $rate;
-                            $result[] = [ 'code' => "$from-$to", 'historical' => date( "d/m/Y", strtotime( $decode['date'] ) ), 'amount' => numfmt_format_currency( $fmt, $value, $to ), 'rate' => $rate ];
-                        }
-                    }
-                }
-            }
-
             // If external API is not available try return historical data
             if ( empty( $result ) )
             {
