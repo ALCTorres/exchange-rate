@@ -30,7 +30,7 @@ class ExchangeRateController extends Controller
      * @var (array)
      * @access private
      */
-    private $apiUrl = [ 'all' => 'api.exchangerate.host/latest?places=2&', 'to' => "api.exchangerate.host/convert?places=2&" ];
+    private $apiUrl = [ 'all' => 'https://api.exchangerate.host/latest?places=2&', 'to' => "https://api.exchangerate.host/convert?places=2&" ];
 
     /**
      * Show exchange rate tools index
